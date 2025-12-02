@@ -7,7 +7,7 @@ import imageRouter from "./routes/image.route.js";
 const app = express();
 app.use(
   cors({
-    origin: process.env.ORIGIN || "http://localhost:5173",
+    origin: process.env.ORIGIN,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     credentials: true,
     optionsSuccessStatus: 204,
