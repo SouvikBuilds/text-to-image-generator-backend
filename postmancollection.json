@@ -1,179 +1,213 @@
 {
   "info": {
-    "name": "Imagify User API",
-    "description": "Collection for testing Imagify user authentication and management endpoints",
+    "name": "Imagify API",
+    "description": "Complete API collection for Imagify - AI Image Generator",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Register User",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
+      "name": "User Management",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "register"]
+            }
           }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
         },
-        "url": {
-          "raw": "{{baseUrl}}/api/v1/users/register",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "v1", "users", "register"]
-        }
-      }
-    },
-    {
-      "name": "Login User",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "login"]
+            }
           }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
         },
-        "url": {
-          "raw": "{{baseUrl}}/api/v1/users/login",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "v1", "users", "login"]
-        }
-      }
-    },
-    {
-      "name": "Get Current User",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{accessToken}}"
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", ""]
+            }
           }
-        ],
-        "url": {
-          "raw": "{{baseUrl}}/api/v1/users/",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "v1", "users", ""]
-        }
-      }
-    },
-    {
-      "name": "Refresh Access Token",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
         },
-        "url": {
-          "raw": "{{baseUrl}}/api/v1/users/refresh-token",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "v1", "users", "refresh-token"]
-        }
-      }
-    },
-    {
-      "name": "Change Password",
-      "request": {
-        "method": "PATCH",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{accessToken}}"
-          },
-          {
-            "key": "Content-Type",
-            "value": "application/json"
+        {
+          "name": "Refresh Access Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/refresh-token",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "refresh-token"]
+            }
           }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"oldPassword\": \"password123\",\n  \"newPassword\": \"newpassword123\"\n}"
         },
-        "url": {
-          "raw": "{{baseUrl}}/api/v1/users/change-password",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "v1", "users", "change-password"]
-        }
-      }
-    },
-    {
-      "name": "Get User Credit",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{accessToken}}"
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"oldPassword\": \"password123\",\n  \"newPassword\": \"newpassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/change-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "change-password"]
+            }
           }
-        ],
-        "url": {
-          "raw": "{{baseUrl}}/api/v1/users/credit",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "v1", "users", "credit"]
-        }
-      }
-    },
-    {
-      "name": "Generate Image",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{accessToken}}"
-          },
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"prompt\": \"A beautiful sunset over mountains\",\n  \"width\": 1024,\n  \"height\": 1024\n}"
         },
-        "url": {
-          "raw": "{{baseUrl}}/api/v1/images/generate",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "v1", "images", "generate"]
+        {
+          "name": "Logout User",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "logout"]
+            }
+          }
         }
-      }
+      ]
     },
     {
-      "name": "Logout User",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{accessToken}}"
+      "name": "Credits & Payment",
+      "item": [
+        {
+          "name": "Get User Credit",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/credit",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "credit"]
+            }
           }
-        ],
-        "url": {
-          "raw": "{{baseUrl}}/api/v1/users/logout",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "v1", "users", "logout"]
+        },
+        {
+          "name": "Pay with Razorpay",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"planId\": \"Basic\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/pay-razorpay",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "pay-razorpay"]
+            }
+          }
+        },
+        {
+          "name": "Verify Razorpay Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"razorpay_order_id\": \"order_example123\",\n  \"razorpay_payment_id\": \"pay_example123\",\n  \"razorpay_signature\": \"signature_example123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/verify-razorpay",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "verify-razorpay"]
+            }
+          }
         }
-      }
+      ]
+    },
+    {
+      "name": "Image Generation",
+      "item": [
+        {
+          "name": "Generate Image",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"prompt\": \"A beautiful sunset over mountains\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/images/generate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "images", "generate"]
+            }
+          }
+        }
+      ]
     }
   ],
   "variable": [
     {
       "key": "baseUrl",
-      "value": "http://localhost:3000",
+      "value": "http://localhost:4000",
       "type": "string"
     },
     {

@@ -5,6 +5,8 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
 import { config } from "../config/config.js";
 import { isValidObjectId } from "mongoose";
+import razorpay from "razorpay";
+import { Transaction } from "../models/transaction.model.js";
 
 const registerUser = asyncHandler(async (req, res) => {
   try {
@@ -220,7 +222,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
 
 const userCredit = asyncHandler(async (req, res) => {
   try {
-    const { userId } = req.query;
+    const userId = req.user?._id;
     if (!isValidObjectId(userId)) {
       throw new ApiError(400, "Invalid user id");
     }
@@ -243,6 +245,132 @@ const userCredit = asyncHandler(async (req, res) => {
   }
 });
 
+const razorpayInstance = new razorpay({
+  key_id: config.RAZORPAY_TEST_API_KEY,
+  key_secret: config.RAZORPAY_TEST_KEY_SECRET,
+});
+
+const paymentrazorPay = asyncHandler(async (req, res) => {
+  try {
+    const { planId } = req.body;
+    const userId = req.user?._id;
+    const userData = await User.findById(userId);
+    if (!isValidObjectId(userId)) {
+      throw new ApiError(400, "Invalid user id");
+    }
+    if (!userId || !planId) {
+      throw new ApiError(400, "Missing id details");
+    }
+    if (!userData) {
+      throw new ApiError(404, "User not found");
+    }
+    let credits, plan, amount, date;
+    switch (planId) {
+      case "Basic":
+        plan = "Basic";
+        credits = 100;
+        amount = 10;
+        break;
+      case "Advanced":
+        plan = "Advanced";
+        credits = 500;
+        amount = 50;
+        break;
+      case "Business":
+        plan = "Business";
+        credits = 5000;
+        amount = 250;
+        break;
+      default:
+        throw new ApiError(404, "Plan not found");
+    }
+    date = Date.now();
+    const transactionData = {
+      userId,
+      plan,
+      amount,
+      credits,
+      date,
+    };
+    const newTransaction = await Transaction.create(transactionData);
+    const options = {
+      amount: amount * 100,
+      currency: config.CURRENCY,
+      receipt: newTransaction._id,
+    };
+    await razorpayInstance.orders.create(options, (error, order) => {
+      if (error) {
+        console.log(error);
+        throw new ApiError(500, error?.message || "Something went wrong");
+      }
+      return res
+        .status(200)
+        .json(new ApiResponse(200, order, "Order created successfully"));
+    });
+  } catch (error) {
+    console.log(error);
+    throw new ApiError(500, error?.message || "Something went wrong");
+  }
+});
+
+const verifyRazorPay = asyncHandler(async (req, res) => {
+  try {
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+    
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      throw new ApiError(400, "Missing payment verification data");
+    }
+
+    const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id);
+
+    if (orderInfo.status === "paid") {
+      const transactionData = await Transaction.findById(orderInfo.receipt);
+      
+      if (!transactionData) {
+        throw new ApiError(404, "Transaction not found");
+      }
+
+      if (transactionData.payment) {
+        throw new ApiError(400, "Payment already processed");
+      }
+
+      const userData = await User.findById(transactionData.userId);
+      if (!userData) {
+        throw new ApiError(404, "User not found");
+      }
+      
+      const creditBalance = userData.creditBalance + transactionData.credits;
+      await User.findByIdAndUpdate(
+        userData._id,
+        {
+          $set: {
+            creditBalance: creditBalance,
+          },
+        },
+        { new: true }
+      );
+      
+      await Transaction.findByIdAndUpdate(
+        transactionData._id,
+        {
+          $set: {
+            payment: true,
+          },
+        },
+        { new: true }
+      );
+      
+      return res
+        .status(200)
+        .json(new ApiResponse(200, { success: true }, "Payment verified successfully"));
+    } else {
+      throw new ApiError(400, "Payment not completed");
+    }
+  } catch (error) {
+    console.log(error);
+    throw new ApiError(500, error?.message || "Something went wrong");
+  }
+});
 export {
   registerUser,
   generateAccessAndRefreshToken,
@@ -252,4 +380,6 @@ export {
   getCurrentUser,
   changeCurrentPassword,
   userCredit,
+  paymentrazorPay,
+  verifyRazorPay,
 };

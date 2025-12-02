@@ -7,6 +7,8 @@ import {
   getCurrentUser,
   changeCurrentPassword,
   userCredit,
+  paymentrazorPay,
+  verifyRazorPay,
 } from "../controllers/user.controller.js";
 import express, { Router } from "express";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -19,5 +21,7 @@ router.route("/refresh-token").post(refreshAccessToken);
 router.route("/").get(verifyJWT, getCurrentUser);
 router.route("/change-password").patch(verifyJWT, changeCurrentPassword);
 router.route("/credit").get(verifyJWT, userCredit);
+router.route("/pay-razorpay").post(verifyJWT, paymentrazorPay);
+router.route("/verify-razorpay").post(verifyJWT, verifyRazorPay);
 
 export default router;

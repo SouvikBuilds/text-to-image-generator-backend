@@ -8,7 +8,7 @@ import axios from "axios";
 
 const generateImage = asyncHandler(async (req, res) => {
   try {
-    const { userId } = req.query;
+    const userId = req.user?._id;
     const { prompt } = req.body;
 
     if (!isValidObjectId(userId)) {
@@ -37,7 +37,7 @@ const generateImage = asyncHandler(async (req, res) => {
           "x-api-key": process.env.CLIPDROP_API_KEY,
           "Content-Type": "multipart/form-data",
         },
-        responseType: 'arraybuffer'
+        responseType: "arraybuffer",
       }
     );
 
@@ -55,7 +55,10 @@ const generateImage = asyncHandler(async (req, res) => {
       .status(200)
       .json(new ApiResponse(200, responseData, "Image Generated Successfully"));
   } catch (error) {
-    console.error('Image generation error:', error.response?.data || error.message);
+    console.error(
+      "Image generation error:",
+      error.response?.data || error.message
+    );
     throw new ApiError(500, error?.message || "Something went wrong");
   }
 });
