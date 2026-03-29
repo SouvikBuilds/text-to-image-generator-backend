@@ -35,10 +35,10 @@ const generateImage = asyncHandler(async (req, res) => {
       {
         headers: {
           "x-api-key": process.env.CLIPDROP_API_KEY,
-          "Content-Type": "multipart/form-data",
+          ...formData.getHeaders(),
         },
         responseType: "arraybuffer",
-      }
+      },
     );
 
     const base64Image = Buffer.from(data).toString("base64");
@@ -57,7 +57,7 @@ const generateImage = asyncHandler(async (req, res) => {
   } catch (error) {
     console.error(
       "Image generation error:",
-      error.response?.data || error.message
+      error.response?.data || error.message,
     );
     throw new ApiError(500, error?.message || "Something went wrong");
   }
