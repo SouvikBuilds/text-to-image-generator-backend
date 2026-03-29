@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-dotenv.config("./.env");
+dotenv.config("");
 
 export const config = {
   CLIPDROP_API_KEY: process.env.CLIPDROP_API_KEY,
