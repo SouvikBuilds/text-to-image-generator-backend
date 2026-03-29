@@ -55,10 +55,9 @@ const generateImage = asyncHandler(async (req, res) => {
       .status(200)
       .json(new ApiResponse(200, responseData, "Image Generated Successfully"));
   } catch (error) {
-    console.error(
-      "Image generation error:",
-      error.response?.data || error.message,
-    );
+    console.error("GENERATE ERROR:", error.response?.status);
+    console.error("GENERATE ERROR DATA:", error.response?.data?.toString());
+    console.error("GENERATE ERROR MSG:", error.message); // ← ADD THESE
     throw new ApiError(500, error?.message || "Something went wrong");
   }
 });
