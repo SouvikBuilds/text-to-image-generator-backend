@@ -8,6 +8,7 @@ import axios from "axios";
 
 const generateImage = asyncHandler(async (req, res) => {
   try {
+    console.log("Generate image request came.");
     const userId = req.user?._id;
     const { prompt } = req.body;
 
