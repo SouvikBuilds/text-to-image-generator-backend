@@ -13,17 +13,21 @@ const generateImage = asyncHandler(async (req, res) => {
     const { prompt } = req.body;
 
     if (!isValidObjectId(userId)) {
+      console.log("Invalid user id");
       throw new ApiError(400, "Invalid user id");
     }
     const user = await User.findById(userId);
     if (!user) {
+      console.log("User not found");
       throw new ApiError(404, "User not found");
     }
     if (prompt.trim() === "") {
+      console.log("prompt Required");
       throw new ApiError(400, "Prompt is required");
     }
 
     if (user.creditBalance === 0 || user.creditBalance < 0) {
+      console.log("No credits left");
       throw new ApiError(400, "You have no credits left");
     }
 
@@ -52,13 +56,14 @@ const generateImage = asyncHandler(async (req, res) => {
       image: resultImage,
       creditBalance: user.creditBalance - 1,
     };
+    console.log("Image generated succesffully");
     return res
       .status(200)
       .json(new ApiResponse(200, responseData, "Image Generated Successfully"));
   } catch (error) {
-    console.error("GENERATE ERROR:", error.response?.status);
-    console.error("GENERATE ERROR DATA:", error.response?.data?.toString());
-    console.error("GENERATE ERROR MSG:", error.message); // ← ADD THESE
+    console.log("GENERATE ERROR:", error.response?.status);
+    console.log("GENERATE ERROR DATA:", error.response?.data?.toString());
+    console.log("GENERATE ERROR MSG:", error.message); // ← ADD THESE
     throw new ApiError(500, error?.message || "Something went wrong");
   }
 });
